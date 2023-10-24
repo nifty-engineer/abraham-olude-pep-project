@@ -8,6 +8,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import DAO.AccountDAO;
+import DAO.MessageDAO;
 import Model.*;
 import Service.AccountService;
 import Service.MessageService;
@@ -19,9 +21,11 @@ import Service.MessageService;
  */
 public class SocialMediaController {
 
-        
-    AccountService accountService;
-    MessageService messageService;
+    AccountDAO accountDAO = new AccountDAO();
+    MessageDAO messageDAO = new MessageDAO();
+    
+    AccountService accountService = new AccountService(accountDAO);
+    MessageService messageService = new MessageService(messageDAO);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
