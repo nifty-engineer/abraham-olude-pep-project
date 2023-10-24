@@ -20,12 +20,9 @@ import Service.MessageService;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
-
-    AccountDAO accountDAO = new AccountDAO();
-    MessageDAO messageDAO = new MessageDAO();
     
-    AccountService accountService = new AccountService(accountDAO);
-    MessageService messageService = new MessageService(messageDAO);
+    AccountService accountService = new AccountService();
+    MessageService messageService = new MessageService();
 
     ObjectMapper objectMapper = new ObjectMapper();
 
