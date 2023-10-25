@@ -38,9 +38,7 @@ public class AccountDAO {
     public Account registerAccount(Account account) {
 
         try {
-            String sql = "INSERT INTO account a2 (username, password) SELECT DISTINCT username, password "
-                + "FROM account a1 WHERE NOT EXISTS (SELECT username, password FROM account a2 "
-                + "WHERE a1.username = ? AND a1.password = ?)";
+            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, account.getUsername());
@@ -70,7 +68,7 @@ public class AccountDAO {
             
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
-                account = new Account(
+                return new Account(
                     rs.getInt("account_id"),
                     rs.getString("username"),
                     rs.getString("password"));                
@@ -80,6 +78,6 @@ public class AccountDAO {
             System.out.println(e.getMessage());
         }
 
-        return account;
+        return null;
     }
 }

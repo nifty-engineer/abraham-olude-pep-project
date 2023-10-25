@@ -122,12 +122,11 @@ public class MessageDAO {
             ResultSet rs = preparedStatement.executeQuery();
 
             if(rs.next()) {
-                Message message = new Message(
+                return new Message(
                     rs.getInt("message_id"), 
                     rs.getInt("posted_by"), 
                     rs.getString("message_text"), 
                     rs.getLong("time_posted_epoch"));
-                return message;
             }            
         }
         catch(SQLException e) {

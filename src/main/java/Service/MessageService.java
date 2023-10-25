@@ -24,13 +24,9 @@ public class MessageService {
 
     public Message createMessage(Message message) {
 
-        Message created = new Message();
-
-
         List<Integer> accountsIds = new ArrayList<>();
         accountDAO.getAllAccounts().forEach(acc -> accountsIds.add(acc.getAccount_id()));
 
-        try {
             if (message.getMessage_text().isBlank()) {
                 throw new BlankException("Blank message");
             }
@@ -42,13 +38,7 @@ public class MessageService {
                 throw new BlankException("Message is not from a registered user");
             }
 
-            created = messageDAO.createMessage(message);
-        }
-        catch (ArithmeticException | BlankException e) {
-            System.out.println(e);
-        }
-
-        return created;
+            return messageDAO.createMessage(message);
     }
 
     public List<Message> retrieveAllMessages() {
@@ -68,7 +58,6 @@ public class MessageService {
 
     public Message updateMessageById(int messageId, String newMessageText) {
 
-        try {
             if (!retrieveAllMessages().contains(retrieveMessageById(messageId))) {
                 throw new BlankException("User is not registered to an account");
             }
@@ -80,12 +69,6 @@ public class MessageService {
             }
 
             return messageDAO.updateMessageById(messageId, newMessageText);
-        }
-        catch (ArithmeticException | BlankException e) {
-            System.out.println(e);
-        }
-
-        return null;
     }
 
     public List<Message> retrieveAllMessagesByUser(int accountId) {

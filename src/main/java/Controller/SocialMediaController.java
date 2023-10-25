@@ -61,11 +61,12 @@ public class SocialMediaController {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                String messageId = context.pathParam("message_id");
+                // String messageId = context.pathParam("message_id");
                 String jsonString = context.body();
                 Message message = objectMapper.readValue(jsonString, Message.class);
     
-                message = messageService.updateMessageById(Integer.valueOf(messageId), message.getMessage_text());
+                // message = messageService.updateMessageById(Integer.valueOf(messageId), message.getMessage_text());
+                message = messageService.updateMessageById(message.getMessage_id(), message.getMessage_text());
     
                 context.json(message);
                 context.status(200);
