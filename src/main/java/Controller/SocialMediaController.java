@@ -8,8 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import DAO.AccountDAO;
-import DAO.MessageDAO;
 import Model.*;
 import Service.AccountService;
 import Service.MessageService;
@@ -24,7 +22,7 @@ public class SocialMediaController {
     AccountService accountService = new AccountService();
     MessageService messageService = new MessageService();
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    // ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
@@ -34,6 +32,8 @@ public class SocialMediaController {
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
+
+        // ObjectMapper objectMapper = new ObjectMapper();
 
         // app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerAccount);
@@ -59,6 +59,8 @@ public class SocialMediaController {
         app.patch("/messages/{message_id}", context -> {
 
             try {
+                ObjectMapper objectMapper = new ObjectMapper();
+
                 String messageId = context.pathParam("message_id");
                 String jsonString = context.body();
                 Message message = objectMapper.readValue(jsonString, Message.class);
@@ -68,7 +70,7 @@ public class SocialMediaController {
                 context.json(message);
                 context.status(200);
             }
-            catch(JsonProcessingException e) {
+            catch(RuntimeException e) {
                 context.status(400);
             }
         });
@@ -111,7 +113,8 @@ public class SocialMediaController {
 
     private void registerAccount(Context context) {
         try {
-            // ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper();
+
             String jsonString = context.body();
             Account account = objectMapper.readValue(jsonString, Account.class);
 
@@ -120,13 +123,15 @@ public class SocialMediaController {
             context.json(account);
             context.status(200);
         }
-        catch(JsonProcessingException e) {
+        catch(RuntimeException | JsonProcessingException e) {
             context.status(400);
         }
     }
 
     private void loginAccount(Context context) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
             String jsonString = context.body();
             Account account = objectMapper.readValue(jsonString, Account.class);
 
@@ -135,13 +140,15 @@ public class SocialMediaController {
             context.json(account);
             context.status(200);
         }
-        catch(JsonProcessingException e) {
+        catch(RuntimeException | JsonProcessingException e) {
             context.status(401);
         }
     }
 
     private void createMessage(Context context) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
             String jsonString = context.body();
             Message message = objectMapper.readValue(jsonString, Message.class);
 
@@ -150,7 +157,7 @@ public class SocialMediaController {
             context.json(message);
             context.status(200);
         }
-        catch(JsonProcessingException e) {
+        catch(RuntimeException | JsonProcessingException e) {
             context.status(400);
         }
     }

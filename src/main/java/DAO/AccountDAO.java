@@ -38,7 +38,9 @@ public class AccountDAO {
     public Account registerAccount(Account account) {
 
         try {
-            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
+            String sql = "INSERT INTO account a2 (username, password) SELECT DISTINCT username, password "
+                + "FROM account a1 WHERE NOT EXISTS (SELECT username, password FROM account a2 "
+                + "WHERE a1.username = ? AND a1.password = ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, account.getUsername());
