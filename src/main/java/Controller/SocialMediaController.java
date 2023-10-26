@@ -61,17 +61,20 @@ public class SocialMediaController {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                // String messageId = context.pathParam("message_id");
+                String messageId = context.pathParam("message_id");
                 String jsonString = context.body();
                 Message message = objectMapper.readValue(jsonString, Message.class);
     
-                // message = messageService.updateMessageById(Integer.valueOf(messageId), message.getMessage_text());
-                message = messageService.updateMessageById(message.getMessage_id(), message.getMessage_text());
+                messageService.updateMessageById(Integer.valueOf(messageId), message);
+                // message = messageService.updateMessageById(message.getMessage_id(), message.getMessage_text());
+
+                message = messageService.retrieveMessageById(Integer.valueOf(messageId));
     
                 context.json(message);
                 context.status(200);
             }
             catch(RuntimeException e) {
+                e.printStackTrace();
                 context.status(400);
             }
         });
@@ -159,6 +162,7 @@ public class SocialMediaController {
             context.status(200);
         }
         catch(RuntimeException | JsonProcessingException e) {
+            // e.printStackTrace();
             context.status(400);
         }
     }

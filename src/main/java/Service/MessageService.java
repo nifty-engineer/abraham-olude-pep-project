@@ -12,7 +12,7 @@ import DAO.MessageDAO;
 public class MessageService {
     
     private MessageDAO messageDAO;
-    private AccountDAO accountDAO;
+    private AccountDAO accountDAO = new AccountDAO();
 
     public MessageService() {
         messageDAO = new MessageDAO();
@@ -25,13 +25,14 @@ public class MessageService {
     public Message createMessage(Message message) {
 
         List<Integer> accountsIds = new ArrayList<>();
+
         accountDAO.getAllAccounts().forEach(acc -> accountsIds.add(acc.getAccount_id()));
 
             if (message.getMessage_text().isBlank()) {
                 throw new BlankException("Blank message");
             }
-            if (message.getMessage_text().length() < 255) {
-                throw new ArithmeticException("Message must be 255 characters or more");
+            if (message.getMessage_text().length() > 254) {
+                throw new ArithmeticException("Message must be no more than 254 characters");
             }
             Integer messagePostedBy = Integer.valueOf(message.getPosted_by());
             if (!accountsIds.contains(messagePostedBy)) {
@@ -53,22 +54,26 @@ public class MessageService {
 
     public Message deleteMessageById(int messageId) {
 
-        return messageDAO.deleteMessageById(messageId);
+        Message messageToBeDeleted = retrieveMessageById(messageId);
+
+        messageDAO.deleteMessageById(messageId);
+
+        return messageToBeDeleted;
     }
 
-    public Message updateMessageById(int messageId, String newMessageText) {
+    public int updateMessageById(int messageId, Message newMessage) {
 
             if (!retrieveAllMessages().contains(retrieveMessageById(messageId))) {
                 throw new BlankException("User is not registered to an account");
             }
-            if (newMessageText.isBlank()) {
+            if (newMessage.getMessage_text().isBlank()) {
                 throw new BlankException("Enter a valid new message");
             }
-            if (newMessageText.length() > 255) {
+            if (newMessage.getMessage_text().length() > 255) {
                 throw new ArithmeticException("Message exceeds 255 characters");
             }
 
-            return messageDAO.updateMessageById(messageId, newMessageText);
+            return messageDAO.updateMessageById(messageId, newMessage);
     }
 
     public List<Message> retrieveAllMessagesByUser(int accountId) {

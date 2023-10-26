@@ -28,6 +28,7 @@ public class AccountService {
             if(account.getPassword().length() < 4) {
                 throw new ArithmeticException("Password should be four or more characters");
             }
+            
             return accountDAO.registerAccount(account);
     }
 
