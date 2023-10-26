@@ -86,7 +86,7 @@ public class MessageDAO {
         return new Message();
     }
 
-    public int deleteMessageById(int messageId) {
+    public void deleteMessageById(int messageId) {
 
         try {
             String sql = "DELETE FROM message WHERE message_id = ?";
@@ -94,16 +94,14 @@ public class MessageDAO {
             
             preparedStatement.setInt(1, messageId);
             
-            return preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
-        }
-
-        return 0;
+        }    
     }
 
-    public int updateMessageById(int messageId, Message newMessage) {
+    public void updateMessageById(int messageId, Message newMessage) {
         
         try {
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
@@ -112,13 +110,11 @@ public class MessageDAO {
             preparedStatement.setString(1, newMessage.getMessage_text());
             preparedStatement.setInt(2, messageId);
             
-            return preparedStatement.executeUpdate();         
+            preparedStatement.executeUpdate();         
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
         }
-
-        return 0;
     }
 
     public List<Message> retrieveAllMessagesByUser(int accountId) {
@@ -147,5 +143,5 @@ public class MessageDAO {
 
         return messages;
     }
-    
+        
 }

@@ -5,6 +5,7 @@ import Service.exceptions.BlankException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import DAO.AccountDAO;
 import DAO.MessageDAO;
@@ -49,19 +50,25 @@ public class MessageService {
 
     public Message retrieveMessageById(int messageId) {
 
-        return messageDAO.retrieveMessageById(messageId);
+        Message message = messageDAO.retrieveMessageById(messageId);
+
+        if (message.getMessage_text() == null) {
+            throw new NoSuchElementException("Message not found");
+        }
+
+        return message;
     }
 
-    public Message deleteMessageById(int messageId) {
+    public Message deleteMessageById(int messageId) throws NoSuchElementException {
 
-        Message messageToBeDeleted = retrieveMessageById(messageId);
+            Message message = retrieveMessageById(messageId);
 
-        messageDAO.deleteMessageById(messageId);
+            messageDAO.deleteMessageById(messageId);
 
-        return messageToBeDeleted;
+            return message;
     }
 
-    public int updateMessageById(int messageId, Message newMessage) {
+    public void updateMessageById(int messageId, Message newMessage) {
 
             if (!retrieveAllMessages().contains(retrieveMessageById(messageId))) {
                 throw new BlankException("User is not registered to an account");
@@ -69,11 +76,11 @@ public class MessageService {
             if (newMessage.getMessage_text().isBlank()) {
                 throw new BlankException("Enter a valid new message");
             }
-            if (newMessage.getMessage_text().length() > 255) {
+            if (newMessage.getMessage_text().length() > 254) {
                 throw new ArithmeticException("Message exceeds 255 characters");
             }
 
-            return messageDAO.updateMessageById(messageId, newMessage);
+            messageDAO.updateMessageById(messageId, newMessage);
     }
 
     public List<Message> retrieveAllMessagesByUser(int accountId) {

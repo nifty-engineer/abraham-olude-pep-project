@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +23,6 @@ public class SocialMediaController {
     AccountService accountService = new AccountService();
     MessageService messageService = new MessageService();
 
-    // ObjectMapper objectMapper = new ObjectMapper();
-
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -33,28 +32,36 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
 
-        // ObjectMapper objectMapper = new ObjectMapper();
-
         // app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerAccount);
         app.post("/login", this::loginAccount);
         app.post("/messages", this::createMessage);
         app.get("/messages", this::retrieveAllMessages);
         app.get("/messages/{message_id}", context -> {
-            String messageId = context.pathParam("message_id");
+            try {
+                String messageId = context.pathParam("message_id");
 
-            Message message = messageService.retrieveMessageById(Integer.valueOf(messageId));
-
-            context.json(message);
-            context.status(200);
+                Message message = messageService.retrieveMessageById(Integer.valueOf(messageId));
+    
+                context.json(message);
+                context.status(200);
+            }
+            catch(NoSuchElementException e) {
+                context.status(200);
+            }
         });
         app.delete("/messages/{message_id}", context -> {
-            String messageId = context.pathParam("message_id");
+            try {
+                String messageId = context.pathParam("message_id");
 
-            Message message = messageService.deleteMessageById(Integer.valueOf(messageId));
-
-            context.json(message);
-            context.status(200);
+                Message message = messageService.deleteMessageById(Integer.valueOf(messageId));
+    
+                context.json(message);
+                context.status(200);
+            }
+            catch(NoSuchElementException e) {
+                context.status(200);
+            }
         });
         app.patch("/messages/{message_id}", context -> {
 
@@ -66,7 +73,6 @@ public class SocialMediaController {
                 Message message = objectMapper.readValue(jsonString, Message.class);
     
                 messageService.updateMessageById(Integer.valueOf(messageId), message);
-                // message = messageService.updateMessageById(message.getMessage_id(), message.getMessage_text());
 
                 message = messageService.retrieveMessageById(Integer.valueOf(messageId));
     
@@ -78,7 +84,7 @@ public class SocialMediaController {
                 context.status(400);
             }
         });
-        app.get("/accounts/{account_id}", context -> {
+        app.get("/accounts/{account_id}/messages", context -> {
 
             String accountId = context.pathParam("account_id");
             
@@ -144,7 +150,7 @@ public class SocialMediaController {
             context.json(account);
             context.status(200);
         }
-        catch(RuntimeException | JsonProcessingException e) {
+        catch(JsonProcessingException | RuntimeException e) {
             context.status(401);
         }
     }
@@ -172,106 +178,5 @@ public class SocialMediaController {
 
         context.json(messages);
         context.status(200);
-    }
-
-
-    // public Javalin loginAccount() {
-    //     Javalin app = Javalin.create();
-
-    //     app.post("/login", this::loginAccount);
-
-    //     return app;
-    // }
-
-
-    // public Javalin createMessage() {
-    //     Javalin app = Javalin.create();
-
-    //     app.post("/messages", this::createMessage);
-
-    //     return app;
-    // }
-
-
-    // public Javalin retrieveAllMessages() {
-    //     Javalin app = Javalin.create();
-        
-    //     app.get("/messages", this::retrieveAllMessages);
-
-    //     return app;
-    // }
-
-
-    // public Javalin retrieveMessageById() {
-    //     Javalin app = Javalin.create();
-
-    //     app.get("/messages/{message_id}", context -> {
-    //         String messageId = context.pathParam("message_id");
-
-    //         Message message = messageService.retrieveMessageById(Integer.valueOf(messageId));
-
-    //         context.json(message);
-    //         context.status(200);
-    //     });
-
-    //     return app;
-    // }
-
-
-    // public Javalin deleteMessageById() {
-    //     Javalin app = Javalin.create();
-
-    //     app.delete("/messages/{message_id}", context -> {
-    //         String messageId = context.pathParam("message_id");
-
-    //         Message message = messageService.deleteMessageById(Integer.valueOf(messageId));
-
-    //         context.json(message);
-    //         context.status(200);
-    //     });
-
-    //     return app;
-    // }
-
-
-    // public Javalin updateMessageById() {
-    //     Javalin app = Javalin.create();
-
-    //     app.patch("/messages/{message_id}", context -> {
-
-    //         try {
-    //             String messageId = context.pathParam("message_id");
-    //             String jsonString = context.body();
-    //             Message message = objectMapper.readValue(jsonString, Message.class);
-    
-    //             message = messageService.updateMessageById(Integer.valueOf(messageId), message.getMessage_text());
-    
-    //             context.json(message);
-    //             context.status(200);
-    //         }
-    //         catch(JsonProcessingException e) {
-    //             context.status(400);
-    //         }
-    //     });
-
-    //     return app;
-    // }
-
-
-    // public Javalin retrieveAllMessagesByUser() {
-    //     Javalin app = Javalin.create();
-
-    //     app.get("/accounts/{account_id}", context -> {
-
-    //             String accountId = context.pathParam("account_id");
-                
-    //             List<Message> message = messageService.retrieveAllMessagesByUser(Integer.valueOf(accountId));
-                
-    //             context.json(message);
-    //             context.status(200);
-    //     });
-
-    //     return app;
-    // }
-              
+    }             
 }
