@@ -29,18 +29,18 @@ public class MessageService {
 
         accountDAO.getAllAccounts().forEach(acc -> accountsIds.add(acc.getAccount_id()));
 
-            if (message.getMessage_text().isBlank()) {
-                throw new BlankException("Blank message");
-            }
-            if (message.getMessage_text().length() > 254) {
-                throw new ArithmeticException("Message must be no more than 254 characters");
-            }
-            Integer messagePostedBy = Integer.valueOf(message.getPosted_by());
-            if (!accountsIds.contains(messagePostedBy)) {
-                throw new BlankException("Message is not from a registered user");
-            }
+        if (message.getMessage_text().isBlank()) {
+            throw new BlankException("Blank message");
+        }
+        if (message.getMessage_text().length() > 254) {
+            throw new ArithmeticException("Message must be no more than 254 characters");
+        }
+        Integer messagePostedBy = Integer.valueOf(message.getPosted_by());
+        if (!accountsIds.contains(messagePostedBy)) {
+            throw new BlankException("Message is not from a registered user");
+        }
 
-            return messageDAO.createMessage(message);
+        return messageDAO.createMessage(message);
     }
 
     public List<Message> retrieveAllMessages() {
@@ -59,7 +59,7 @@ public class MessageService {
         return message;
     }
 
-    public Message deleteMessageById(int messageId) throws NoSuchElementException {
+    public Message deleteMessageById(int messageId) {
 
             Message message = retrieveMessageById(messageId);
 

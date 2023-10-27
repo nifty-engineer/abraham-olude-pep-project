@@ -4,9 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.*;
@@ -46,7 +44,7 @@ public class SocialMediaController {
                 context.json(message);
                 context.status(200);
             }
-            catch(NoSuchElementException e) {
+            catch(Exception e) {
                 context.status(200);
             }
         });
@@ -59,7 +57,7 @@ public class SocialMediaController {
                 context.json(message);
                 context.status(200);
             }
-            catch(NoSuchElementException e) {
+            catch(Exception e) {
                 context.status(200);
             }
         });
@@ -79,7 +77,7 @@ public class SocialMediaController {
                 context.json(message);
                 context.status(200);
             }
-            catch(RuntimeException e) {
+            catch(Exception e) {
                 e.printStackTrace();
                 context.status(400);
             }
@@ -133,7 +131,7 @@ public class SocialMediaController {
             context.json(account);
             context.status(200);
         }
-        catch(RuntimeException | JsonProcessingException e) {
+        catch(Exception e) {
             context.status(400);
         }
     }
@@ -150,7 +148,7 @@ public class SocialMediaController {
             context.json(account);
             context.status(200);
         }
-        catch(JsonProcessingException | RuntimeException e) {
+        catch(Exception e) {
             context.status(401);
         }
     }
@@ -167,7 +165,7 @@ public class SocialMediaController {
             context.json(message);
             context.status(200);
         }
-        catch(RuntimeException | JsonProcessingException e) {
+        catch(Exception e) {
             // e.printStackTrace();
             context.status(400);
         }

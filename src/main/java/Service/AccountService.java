@@ -19,25 +19,25 @@ public class AccountService {
 
     public Account registerAccount(Account account) {
 
-            if(accountDAO.getAllAccounts().contains(account)) {
-                throw new ExistingAccountException("Account already exists");
-            }
-            if(account.getUsername().isBlank()) {
-                throw new BlankException("Enter a valid username");
-            }
-            if(account.getPassword().length() < 4) {
-                throw new ArithmeticException("Password should be four or more characters");
-            }
-            
-            return accountDAO.registerAccount(account);
+        if(accountDAO.getAllAccounts().contains(account)) {
+            throw new ExistingAccountException("Account already exists");
+        }
+        if(account.getUsername().isBlank()) {
+            throw new BlankException("Enter a valid username");
+        }
+        if(account.getPassword().length() < 4) {
+            throw new ArithmeticException("Password should be four or more characters");
+        }
+        
+        return accountDAO.registerAccount(account);
     }
 
     public Account loginAccount(Account account) {
 
-            account = accountDAO.loginAccount(account);
-            if(account == null) {
-                throw new BlankException("Incorrect username or password");
-            }
+        account = accountDAO.loginAccount(account);
+        if(account == null) {
+            throw new BlankException("Incorrect username or password");
+        }
 
         return account;
     }
